@@ -6,9 +6,10 @@ from itertools import count
 import requests
 
 from schemas import Relays, Relay
-from settings import BASEURL, TIMEOUT, HEADERS
+from settings import BASEURL, TIMEOUT, HEADERS, SEMAPHORE
 
 number = count(start=1)
+semaphore: asyncio.Semaphore = asyncio.Semaphore(SEMAPHORE)
 
 
 def grab() -> requests.Response:
@@ -27,17 +28,19 @@ def grab() -> requests.Response:
 
 
 def callback(task: asyncio.Task) -> None:
-    relay = task.result()
-    if relay:
-        print(
-            f"{next(number):2d}. "
-            f"{relay.or_addresses.ip4:<21} "
-            f"{relay.fingerprint:<40} "
-            f"{relay.country_name:^15} "
-            f"{relay.first_seen[:10]} "
-            f"{relay.guard_probability:13.7f}    "
-            f"{relay.advertised_bandwidth / 1049000:10.2f} MiB/s"
-        )
+    if (not task.cancelled()
+            and not task.exception()):
+        relay = task.result()
+        if relay:
+            print(
+                f"{next(number):2d}. "
+                f"{relay.or_addresses.ip4:<21} "
+                f"{relay.fingerprint:<40} "
+                f"{relay.country_name:^15} "
+                f"{relay.first_seen[:10]} "
+                f"{relay.guard_probability:13.7f}    "
+                f"{relay.advertised_bandwidth / 1049000:10.2f} MiB/s"
+            )
 
 
 def parse(response: requests.Response) -> list[Relay]:
@@ -50,24 +53,34 @@ def parse(response: requests.Response) -> list[Relay]:
 
 
 async def main(relays: list[Relay]) -> None:
-    async with asyncio.TaskGroup() as group:
-        for relay in relays:
-            # In Tor metrics We Trust
-            if relay.guard_probability:
-                group.create_task(connect(relay)).add_done_callback(callback)
+    try:
+        async with asyncio.TaskGroup() as group:
+            for relay in relays:
+                # In Tor metrics We Trust
+                if relay.guard_probability:
+                    group.create_task(connect(relay)).add_done_callback(callback)
+    except BaseException:
+        print(
+            '>>> Reduce the SEMAPHORE value in settings.py to avoid the "Too many open files" error.'
+        )
 
 
 async def connect(relay: Relay) -> Relay | None:
-    try:
-        address, port = relay.or_addresses.ip4.split(":")
-        reader, writer = await asyncio.wait_for(
-            asyncio.open_connection(address, port), TIMEOUT)
-        writer.close()
-        await writer.wait_closed()
-    except (OSError, asyncio.TimeoutError):
-        return None
-    else:
-        return relay
+    async with semaphore:
+        try:
+            address, port = relay.or_addresses.ip4.split(":")
+            reader, writer = await asyncio.wait_for(
+                asyncio.open_connection(address, port), TIMEOUT)
+            writer.close()
+            await writer.wait_closed()
+        except asyncio.TimeoutError:
+            return None
+        except OSError as err:
+            if err.args[-1] == 'Too many open files':
+                raise
+            return None
+        else:
+            return relay
 
 
 if __name__ == '__main__':
