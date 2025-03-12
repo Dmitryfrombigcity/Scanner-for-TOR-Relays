@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "tor-relay-scanner"
+version = "0.1.0"
+description = ""
+authors = ["Dmitry Morozov <morozov124@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.32.3"
+pydantic = "^2.10.6"
+types-requests = "^2.32.0.20250306"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.15.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
