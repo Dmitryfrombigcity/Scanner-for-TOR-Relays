@@ -6,4 +6,4 @@ HEADERS = {
     'Accept-Language': 'en-US,en;q=0.5',
 }
 TIMEOUT = 10
-SEMAPHORE = 1000
+OPEN_FILES = 1000

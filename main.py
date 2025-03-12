@@ -6,10 +6,10 @@ from itertools import count
 import requests
 
 from schemas import Relays, Relay
-from settings import BASEURL, TIMEOUT, HEADERS, SEMAPHORE
+from settings import BASEURL, TIMEOUT, HEADERS, OPEN_FILES
 
 number = count(start=1)
-semaphore: asyncio.Semaphore = asyncio.Semaphore(SEMAPHORE)
+semaphore: asyncio.Semaphore = asyncio.Semaphore(OPEN_FILES)
 
 
 def grab() -> requests.Response:
@@ -61,7 +61,7 @@ async def main(relays: list[Relay]) -> None:
                     group.create_task(connect(relay)).add_done_callback(callback)
     except BaseException:
         print(
-            '>>> Reduce the SEMAPHORE value in settings.py to avoid the "Too many open files" error.'
+            '>>> Reduce the OPEN_FILES value in settings.py to avoid the "Too many open files" error.'
         )
 
 
