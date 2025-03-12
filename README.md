@@ -56,7 +56,6 @@ git clone https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays
 ```
 #### Перейдите в директорию проекта:
 ```
-mkdir Scanner-for-TOR-Relays &&
 cd Scanner-for-TOR-Relays
 ```
 #### Установка зависимостей
