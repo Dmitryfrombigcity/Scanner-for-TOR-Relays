@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import sys
 import urllib.parse
@@ -36,7 +37,7 @@ def callback(task: asyncio.Task) -> None:
                 f"{next(number):2d}. "
                 f"{relay.or_addresses.ip4:<21} "
                 f"{relay.fingerprint:<40} "
-                f"{relay.country_name:^15} "
+                f"{relay.country_name[:14]:^15}  "
                 f"{relay.first_seen[:10]} "
                 f"{relay.guard_probability:13.7f}    "
                 f"{relay.advertised_bandwidth / 1049000:10.2f} MiB/s"
@@ -57,7 +58,7 @@ async def main(relays: list[Relay]) -> None:
         async with asyncio.TaskGroup() as group:
             for relay in relays:
                 # In Tor metrics We Trust
-                if relay.guard_probability:
+                if relay.guard_probability or args.all_relays:
                     group.create_task(connect(relay)).add_done_callback(callback)
     except BaseException:
         print(
@@ -84,6 +85,22 @@ async def connect(relay: Relay) -> Relay | None:
 
 
 if __name__ == '__main__':
-    print("         address                          fingerprint               country_name"
-          "   first_seen guard_probability advertised_bandwidth")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-a',
+        '--all',
+        dest='all_relays',
+        action='store_const',
+        const=True,
+        default=False,
+        help='display all relays'
+    )
+    args = parser.parse_args()
+    print("         "
+          "address                          "
+          "fingerprint                "
+          "country_name   "
+          "first_seen "
+          "guard_probability advertised_bandwidth"
+          )
     asyncio.run(main(parse(grab())))
