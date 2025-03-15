@@ -34,7 +34,7 @@ def callback(task: asyncio.Task) -> None:
         relay = task.result()
         if relay:
             print(
-                f"{next(number):2d}. "
+                f"{next(number):3d}. "
                 f"{relay.or_addresses.ip4:<21} "
                 f"{relay.fingerprint:<40} "
                 f"{relay.country_name[:14]:^15}  "
