@@ -1,0 +1,9 @@
+.idea
+**/__pycache__
+.git
+Dockerfile*
+.dockerignore
+.mypy_cache
+.gitignore
+*.yml
+*.md
