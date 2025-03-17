@@ -6,11 +6,12 @@ from itertools import count
 
 import requests
 
+import settings
 from schemas import Relays, Relay
-from settings import BASEURL, TIMEOUT, HEADERS, OPEN_FILES
+from settings import BASEURL, HEADERS, settings
 
 number = count(start=1)
-semaphore: asyncio.Semaphore = asyncio.Semaphore(OPEN_FILES)
+semaphore: asyncio.Semaphore = asyncio.Semaphore(settings.OPEN_FILES)
 
 
 def grab() -> requests.Response:
@@ -20,7 +21,7 @@ def grab() -> requests.Response:
     ]
     for url in urls:
         try:
-            with requests.get(url, timeout=TIMEOUT, headers=HEADERS) as response:
+            with requests.get(url, timeout=settings.TIMEOUT, headers=HEADERS) as response:
                 return response
         except:
             ...
@@ -71,7 +72,7 @@ async def connect(relay: Relay) -> Relay | None:
         try:
             address, port = relay.or_addresses.ip4.split(":")
             reader, writer = await asyncio.wait_for(
-                asyncio.open_connection(address, port), TIMEOUT)
+                asyncio.open_connection(address, port), settings.TIMEOUT)
             writer.close()
             await writer.wait_closed()
         except asyncio.TimeoutError:

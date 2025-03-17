@@ -1,3 +1,8 @@
+from typing import Annotated
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 BASEURL = ("https://onionoo.torproject.org/details?type=relay&running=true&recommended_version=true&"
            "fields=fingerprint,or_addresses,first_seen,country_name,guard_probability,advertised_bandwidth")
 HEADERS = {
@@ -5,5 +10,13 @@ HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.5',
 }
-TIMEOUT = 10
-OPEN_FILES = 1000
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file='.env')
+
+    TIMEOUT: Annotated[int, Field(default=10)]
+    OPEN_FILES: Annotated[int, Field(default=1000)]
+
+
+settings = Settings()
