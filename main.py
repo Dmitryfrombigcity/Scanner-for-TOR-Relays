@@ -3,10 +3,10 @@ import asyncio
 import sys
 import urllib.parse
 from itertools import count
+from typing import Any
 
 import requests
 
-import settings
 from schemas import Relays, Relay
 from settings import BASEURL, HEADERS, settings
 
@@ -29,7 +29,7 @@ def grab() -> requests.Response:
     sys.exit(1)
 
 
-def callback(task: asyncio.Task) -> None:
+def callback(task: asyncio.Task[Any]) -> None:
     if (not task.cancelled()
             and not task.exception()):
         relay = task.result()
