@@ -39,7 +39,7 @@ def callback(task: asyncio.Task) -> None:
                 f"{relay.fingerprint:<40} "
                 f"{relay.country_name[:14]:^15}  "
                 f"{relay.first_seen[:10]} "
-                f"{relay.guard_probability:13.7f}    "
+                f"{0 if relay.guard_probability is None else relay.guard_probability:13.7f}    "
                 f"{relay.advertised_bandwidth / 1049000:10.2f} MiB/s"
             )
 
