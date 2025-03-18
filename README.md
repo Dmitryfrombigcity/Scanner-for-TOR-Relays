@@ -111,6 +111,10 @@ python main.py
 ```
 python main.py --all  
 ```
+Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/), или уже запустить образ прямо из [`DockerHub`](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
+```
+docker run --rm dmitryfrombigcity/tor_relays --all
+```
 
 
 
