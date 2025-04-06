@@ -9,7 +9,8 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 COPY --exclude=pyproject.toml \
     --exclude=poetry.lock \
-    --exclude=requirements.txt . .
+    --exclude=requirements.txt \
+    --exclude=tests . .
 
 RUN adduser --no-create-home app \
     && chown -R app /app
