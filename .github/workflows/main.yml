@@ -1,0 +1,13 @@
+name: test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: cloning
+        uses: actions/checkout@v4.2.2
+      - name: add deps
+        run: pip install -r requirements.txt
+      - name: test
+        run: pytest -v 
+  
