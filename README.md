@@ -66,7 +66,8 @@ cd Scanner-for-TOR-Relays
 [![python-3.10](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.10.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.10.yml)
 [![python-3.11](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.11.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.11.yml)
 [![python-3.12](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.12.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.12.yml)
-[![python-3.13](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.13.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.13.yml)
+[![python-3.13](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.13.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.13.yml)  
+[![ubuntu-latest macos-latest windows-latest](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/os_test.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/os_test.yml)
 
 #### Установите зависимости
 Если вы используете `pip`:  
