@@ -1,4 +1,4 @@
-name: CI
+name: Python version test
 on:
   workflow_call:
     inputs:
@@ -7,7 +7,7 @@ on:
         type: string
 jobs:
   test:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
       - name: cloning
         uses: actions/checkout@v4.2.2
@@ -18,5 +18,5 @@ jobs:
       - name: add deps
         run: pip install -r requirements.txt
       - name: test
-        run: pytest -vv 
-  
+        run: pytest -vv
+
