@@ -1,0 +1,8 @@
+name: python-3.13
+on: push
+
+jobs:
+  ubuntu-latest:
+    uses: ./.github/workflows/main.yml
+    with:
+      os: "3.13"
