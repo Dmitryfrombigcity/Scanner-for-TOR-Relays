@@ -5,4 +5,4 @@ jobs:
   ubuntu-latest:
     uses: ./.github/workflows/main.yml
     with:
-      os: "3.8"
+      python-version: "3.8"
