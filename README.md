@@ -59,16 +59,24 @@ git clone https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays
 ```
 cd Scanner-for-TOR-Relays
 ```
+В системе должен быть один из поддерживаемых интерпретаторов, если нет, то [установите](https://www.python.org/downloads/)   
+
+[![python-3.8](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.8.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.8.yml)
+[![python-3.9](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.9.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.9.yml)
+[![python-3.10](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.10.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.10.yml)
+[![python-3.11](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.11.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.11.yml)
+[![python-3.12](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.12.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.12.yml)
+[![python-3.13](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.13.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/python-3.13.yml)
+
 #### Установите зависимости
 Если вы используете `pip`:  
 #### Создайте и активируйте виртуальное окружение:
+*Возможно придётся указать путь к интерпретатору.*
 ```
 pip install virtualenv &&
 virtualenv -p python3.12 venv &&
 source venv/bin/activate
-```
-В системе должен быть python3.12, если нет, то [установите](https://www.python.org/downloads/)  
-Возможно придётся указать полный путь к интерпретатору.  
+``` 
 *Для Windows активация будет другая:*
 ```
 venv\Scripts\activate.bat
@@ -108,17 +116,25 @@ python main.py
 >
 Устанавливает время ожидания для сетевых соединений. Дано с запасом, мне хватало и пары секунд.
 ## Startup options
-Добавлены опции для фильтрации доступных `relays`
-- --guard   (-g)        показывает только `relays` с `guard_probability` > 0  
-  >**guard_probability**   
-History object containing the probability of this relay to be selected for the guard position. This probability is calculated based on consensus weights, relay flags, and bandwidth weights in the consensus.
-- --bandwidth   (-b)    показывает только `relays` с `advertised_bandwidth` > 0
-  >**advertised_bandwidth**  
-Bandwidth in bytes per second that this relay is willing and capable to provide.
-  
-![relays_2](https://github.com/user-attachments/assets/973f1850-42b4-4cb2-9587-925359c1c67d)
 
-Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/), или уже запустить образ прямо из [`DockerHub`](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
+Добавлены опции для фильтрации доступных `relays`
+- --guard   (-g)        показывает только `relays` с `guard_probability` > 0
+  
+  >**guard_probability**
+  >History object containing the probability of this relay to be selected for the guard position. This probability is calculated 
+  >based on consensus weights, relay flags, and bandwidth weights in the consensus.
+  >
+- --bandwidth   (-b)    показывает только `relays` с `advertised_bandwidth` > 0
+  
+  >**advertised_bandwidth**  
+  >Bandwidth in bytes per second that this relay is willing and capable to provide.
+  >Missing if this information cannot be found.
+  >
+### Примеры запуска программы: 
+![relays_2](https://github.com/user-attachments/assets/973f1850-42b4-4cb2-9587-925359c1c67d)  
+ 
+Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/),   
+или уже запустить образ прямо из [`DockerHub`](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
 ```
 docker run --rm dmitryfrombigcity/tor_relays --all
 ```
