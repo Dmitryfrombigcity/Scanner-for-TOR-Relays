@@ -41,7 +41,8 @@ def callback(task: asyncio.Task[Any]) -> None:
 
 def output_(
         bandwidth: bool,
-        guard_relays: bool
+        guard_relays: bool,
+        top: bool
 ) -> None:
     """Split for test purpose"""
 
@@ -52,6 +53,11 @@ def output_(
           "first_seen "
           "guard_probability advertised_bandwidth"
           )
+    global relays_lst
+
+    if top:
+        relays_lst = relays_lst[:5]
+        temp: list[str] = []
 
     for relay in relays_lst:
         if bandwidth and relay.advertised_bandwidth or guard_relays and relay.guard_probability \
@@ -65,13 +71,22 @@ def output_(
                 f"{relay.guard_probability if relay.guard_probability is not None else 0:13.7f}    "
                 f"{relay.advertised_bandwidth / 1049000 if relay.advertised_bandwidth is not None else 0:10.2f} MiB/s"
             )
+        if top:
+            temp.append(f"{relay.or_addresses.ip4} {relay.fingerprint}\n")
+    if top:
+        print("\n********************************* Replace bridges for Tor Browser *********************************\n")
+        print(*temp, sep='')
+        print("*********************************** Replace bridges for torrc ***************************************\n")
+        for item in temp[:3]:
+            print(f"Bridge {item}", end='')
+        print("UseBridges 1")
 
 
 def output() -> None:
     relays_lst.sort(
         key=lambda x: x.advertised_bandwidth if x.advertised_bandwidth is not None else 0, reverse=True
     )
-    output_(args.bandwidth, args.guard_relays)
+    output_(args.bandwidth, args.guard_relays, args.top)
 
 
 def parse(response: requests.Response) -> list[Relay]:
@@ -148,6 +163,15 @@ if __name__ == '__main__':
         const=True,
         default=False,
         help='display only relays with positive advertised_bandwidth'
+    )
+    parser.add_argument(
+        '-t',
+        '--top',
+        dest='top',
+        action='store_const',
+        const=True,
+        default=False,
+        help='display only the top five relays and input templates'
     )
     args = parser.parse_args()
     asyncio.run(main(parse(grab())))
