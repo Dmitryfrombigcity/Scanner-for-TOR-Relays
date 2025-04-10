@@ -56,18 +56,20 @@ async def test_relays_lst(mocker: Mock) -> None:
 
 
 @pytest.mark.parametrize(
-    "bandwidth, guard_relays, result_index", [
-        (False, False, 0),
-        (True, False, 1),
-        (False, True, 2),
+    "bandwidth, guard_relays, top, result_index", [
+        (False, False, False, 0),
+        (True, False, False, 1),
+        (False, True, False, 2),
+        (False, False, True, 3)
     ]
 )
 def test_relays_filter(
         bandwidth: bool,
         guard_relays: bool,
+        top: bool,
         result_index: int,
         capsys: CaptureFixture[AnyStr]
 ) -> None:
-    main.output_(bandwidth, guard_relays)
+    main.output_(bandwidth, guard_relays, top)
     captured = capsys.readouterr()
     assert captured.out == RELAYS_RESULT[result_index]
