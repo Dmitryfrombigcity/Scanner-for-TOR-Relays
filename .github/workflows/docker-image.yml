@@ -1,7 +1,11 @@
 name: Publish Docker image
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
 
 jobs:
   push_to_registry:
@@ -24,8 +28,8 @@ jobs:
         with:
           images: dmitryfrombigcity/tor_relays
           tags: |
-            # set latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
+            # tag event
+            type=ref,event=tag
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -33,7 +37,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags:   ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
 
