@@ -1,9 +1,12 @@
 .idea
 **/__pycache__
-.git
+.git*
 Dockerfile*
 .dockerignore
 .mypy_cache
 .gitignore
 *.yml
 *.md
+pyproject.toml
+poetry.lock
+tests
