@@ -14,7 +14,7 @@ class Relay(BaseModel):
     first_seen: str | None = None
     country_name: str | None = None
     guard_probability: float | None = None
-    advertised_bandwidth: int | None = None
+    advertised_bandwidth: float | None = None
 
 
 class Relays(BaseModel):
