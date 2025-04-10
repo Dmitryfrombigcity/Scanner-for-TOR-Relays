@@ -12,7 +12,7 @@ COPY --exclude=pyproject.toml \
     --exclude=requirements.txt \
     --exclude=tests . .
 
-RUN adduser --no-create-home app \
+RUN adduser --no-create-home --disabled-password app \
     && chown -R app /app
 USER app
 
