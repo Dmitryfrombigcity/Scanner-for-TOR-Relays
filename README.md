@@ -136,9 +136,11 @@ python main.py
 - --top (-t)           показывает пять лучших `relays` и выводит шаблоны для копирования. 
 ### Примеры запуска программы: 
 ![relays_4](https://github.com/user-attachments/assets/a37f192a-217c-4579-892f-6362a72dfc31)
- 
-Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/),
-или уже запустить образ прямо из [`DockerHub`](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
+
+----------------------------------- 
+### Добавлен `Dockerfile`.  
+Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/),
+или запустить образ прямо из [`DockerHub`.](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
 [![Publish Docker image](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/docker-image.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/docker-image.yml)  
 ```
 docker run --rm dmitryfrombigcity/tor_relays 
