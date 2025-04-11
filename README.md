@@ -133,13 +133,24 @@ python main.py
   >Bandwidth in bytes per second that this relay is willing and capable to provide.
   >Missing if this information cannot be found.
   >
+- --top (-t)           показывает пять лучших `relays` и выводит шаблоны для копирования. 
 ### Примеры запуска программы: 
 ![relays_3](https://github.com/user-attachments/assets/e9c371a1-4658-46ea-8685-77f69933ffd6) 
  
-Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/),   
+Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/),
 или уже запустить образ прямо из [`DockerHub`](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
+[![Publish Docker image](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/docker-image.yml/badge.svg)](https://github.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/actions/workflows/docker-image.yml)  
 ```
-docker run --rm dmitryfrombigcity/tor_relays --all
+docker run --rm dmitryfrombigcity/tor_relays 
+```
+```
+docker run --rm dmitryfrombigcity/tor_relays --bandwidth
+```
+```
+docker run --rm dmitryfrombigcity/tor_relays --guard
+```
+```
+docker run --rm dmitryfrombigcity/tor_relays --top
 ```
 
 
