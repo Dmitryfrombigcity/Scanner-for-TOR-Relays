@@ -1,5 +1,8 @@
 name: ubuntu-latest macos-latest windows-latest
-on: push
+on:
+  push:
+    tags:
+      - 'v*'
 jobs:
   test:
     runs-on: ${{ matrix.os }}
