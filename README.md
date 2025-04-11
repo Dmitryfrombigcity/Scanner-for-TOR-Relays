@@ -1,5 +1,5 @@
 ## Scanner for available TOR Relays.  
-*в работе*
+
 ![pic1](https://github.com/user-attachments/assets/eae7917a-80b8-4009-bed6-7186fba2e052)
 ## Prerequisites
 Однажды утром упали `bridges` и `Telegram` работал не быстро, а запрос на новые мосты отправил с неправильным `subject`,
@@ -135,7 +135,7 @@ python main.py
   >
 - --top (-t)           показывает пять лучших `relays` и выводит шаблоны для копирования. 
 ### Примеры запуска программы: 
-![relays_3](https://github.com/user-attachments/assets/e9c371a1-4658-46ea-8685-77f69933ffd6) 
+![relays_4](https://github.com/user-attachments/assets/a37f192a-217c-4579-892f-6362a72dfc31)
  
 Добавлен `Dockerfile`. Теперь вы можете создать образ и запустить в [`Docker`](https://www.docker.com/),
 или уже запустить образ прямо из [`DockerHub`](https://hub.docker.com/r/dmitryfrombigcity/tor_relays)  
@@ -152,6 +152,7 @@ docker run --rm dmitryfrombigcity/tor_relays --guard
 ```
 docker run --rm dmitryfrombigcity/tor_relays --top
 ```
+
 
 
 
