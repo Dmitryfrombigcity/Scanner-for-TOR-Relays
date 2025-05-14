@@ -18,12 +18,15 @@ relays_lst: list[Relay] = []
 
 def grab() -> requests.Response:
     urls = [
-        "https://icors.vercel.app/?" + urllib.parse.quote(BASEURL),
         BASEURL,
+        # "https://icors.vercel.app/?" + urllib.parse.quote(BASEURL),
+        "https://github.com/Dmitryfrombigcity/tor-onionoo-mirror/raw/master/details-running-relays.json"
+
     ]
     for url in urls:
         try:
             with requests.get(url, timeout=settings.TIMEOUT, headers=HEADERS) as response:
+                response.raise_for_status()
                 return response
         except BaseException:
             ...
