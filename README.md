@@ -161,7 +161,7 @@ docker run --rm dmitryfrombigcity/tor_relays --top
 Начиная с `v2.4` вы можете SOCKS5 Proxy, в частности от TOR, для уточнения текущей информации.  
 Например: 
 ```
-docker run --rm  --env --network=host --env HTTPS_PROXY=socks5h://localhost:9150 dmitryfrombigcity/tor_relays:latest 
+docker run --rm  --network=host --env HTTPS_PROXY=socks5h://localhost:9150 dmitryfrombigcity/tor_relays:latest 
 ```
 
 
