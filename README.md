@@ -155,7 +155,14 @@ docker run --rm dmitryfrombigcity/tor_relays --guard
 docker run --rm dmitryfrombigcity/tor_relays --top
 ```
 
+### Updates.  
 
+Начиная с `v2.3` информация с сайта `onionoo.torproject.org` кэшируется каждые 8 часов.  
+Начиная с `v2.4` вы можете SOCKS5 Proxy, в частности от TOR, для уточнения текущей информации.  
+Например: 
+```
+docker run --rm  --env --network=host --env HTTPS_PROXY=socks5h://localhost:9150 dmitryfrombigcity/tor_relays:latest 
+```
 
 
 
