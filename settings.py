@@ -15,7 +15,7 @@ HEADERS = {
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env')
 
-    TIMEOUT: int = Field(default=10)
+    TIMEOUT: int = Field(default=5)
     OPEN_FILES: int = Field(default=1000)
 
 
