@@ -6,7 +6,6 @@ import pytest
 from _pytest.capture import CaptureFixture
 
 import main
-from main import relays_lst
 from settings import settings
 from tests.sample import GOOD_IP, RELAYS_ALL, RELAYS, RELAYS_RESULT
 
@@ -35,7 +34,7 @@ def fake_output() -> None:
     main.relays_lst.sort(
         key=lambda x: x.advertised_bandwidth if x.advertised_bandwidth is not None else 0, reverse=True
     )
-    assert relays_lst == RELAYS_ALL
+    assert main.relays_lst == RELAYS_ALL
 
 
 async def test_relays_lst(mocker: Mock) -> None:
