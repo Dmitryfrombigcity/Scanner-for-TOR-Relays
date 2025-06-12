@@ -7,7 +7,7 @@ from _pytest.capture import CaptureFixture
 
 import main
 from settings import settings
-from tests.sample import GOOD_IP, RELAYS_ALL, RELAYS, RELAYS_RESULT
+from sample import GOOD_IP, RELAYS_ALL, RELAYS, RELAYS_RESULT
 
 
 class FakeWriter:
