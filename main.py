@@ -2,7 +2,6 @@ import argparse
 import asyncio
 import sys
 import urllib.parse
-from asyncio import sleep, CancelledError
 from itertools import count, cycle
 from typing import Any
 
