@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1-labs
 FROM python:3.13.3-alpine3.21
-LABEL version="2.1"
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1
