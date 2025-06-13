@@ -27,8 +27,8 @@ def grab() -> requests.Response:
             with requests.get(url, timeout=settings.TIMEOUT, headers=HEADERS) as response:
                 response.raise_for_status()
                 return response
-        except BaseException:
-            ...
+        except BaseException as err:
+            print(f'# URL:{urllib.parse.urlparse(url).netloc} >> Error:{type(err).__name__}')
     print("Didn't get a list of relays")
     sys.exit(1)
 
@@ -107,25 +107,31 @@ async def progress_bar() -> None:
     items = cycle(samples)
     try:
         while True:
-            await sleep(0.5)
+            await asyncio.sleep(0.5)
             print(f'{hide_cursor}\rAnalysis in progress {next(items)}', end='')
-    except CancelledError:
+    except asyncio.CancelledError:
         print(show_cursor)
 
 
 async def main(relays: list[Relay]) -> None:
+    progress = asyncio.create_task(progress_bar())
     try:
-        progress = asyncio.create_task(progress_bar())
         async with asyncio.TaskGroup() as group:
             for relay in relays:
                 group.create_task(connect(relay)).add_done_callback(callback)
-    except BaseException:
+
+    except ExceptionGroup:
         print(
-            '>>> Reduce the OPEN_FILES value in settings.py to avoid the "Too many open files" error.'
+            '\n>>> Reduce the OPEN_FILES value in settings.py to avoid the "Too many open files" error.'
+        )
+    except asyncio.CancelledError:
+        print(
+            '\n>>> Interrupted by user.'
         )
     else:
-        progress.cancel()
         output()
+    finally:
+        progress.cancel()
 
 
 async def connect(relay: Relay) -> Relay | None:
