@@ -1,0 +1,6 @@
+class TooManyOpenFiles(Exception):
+    ...
+
+
+class NetworkIsUnreachable(Exception):
+    ...
