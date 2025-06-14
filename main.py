@@ -7,6 +7,7 @@ from typing import Any
 
 import requests
 
+from exceptions import TooManyOpenFiles, NetworkIsUnreachable
 from schemas import Relays, Relay
 from settings import BASEURL, HEADERS, settings
 
@@ -120,14 +121,19 @@ async def main(relays: list[Relay]) -> None:
             for relay in relays:
                 group.create_task(connect(relay)).add_done_callback(callback)
 
-    except ExceptionGroup:
+    except* TooManyOpenFiles:
         print(
             '\n>>> Reduce the OPEN_FILES value in settings.py to avoid the "Too many open files" error.'
         )
-    except asyncio.CancelledError:
+    except* NetworkIsUnreachable:
         print(
-            '\n>>> Interrupted by user.'
+            '\n>>> Network is getting unreachable, try to reduce the OPEN_FILES value in settings.py or something else.'
         )
+    except* Exception:
+        print(
+            '\n>>> Something went wrong.'
+        )
+
     else:
         output()
     finally:
@@ -145,8 +151,10 @@ async def connect(relay: Relay) -> Relay | None:
         except asyncio.TimeoutError:
             return None
         except OSError as err:
-            if err.args[-1] == 'Too many open files':
-                raise
+            if err.args[0] == 24:  # Too many open files
+                raise TooManyOpenFiles
+            if err.args[0] == 101:  # Network is unreachable
+                raise NetworkIsUnreachable
             return None
         else:
             return relay
@@ -182,4 +190,9 @@ if __name__ == '__main__':
         help='display only the top five relays and input templates'
     )
     args = parser.parse_args()
-    asyncio.run(main(parse(grab())))
+    try:
+        asyncio.run(main(parse(grab())))
+    except KeyboardInterrupt:
+        print(
+            '>>> Interrupted by user.'
+        )
