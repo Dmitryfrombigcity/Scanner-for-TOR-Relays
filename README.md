@@ -158,11 +158,14 @@ docker run --rm dmitryfrombigcity/tor_relays --top
 ### Updates.  
 
 Начиная с `v2.3` информация с сайта `onionoo.torproject.org` кэшируется каждые 8 часов.  
-Начиная с `v2.4` вы можете SOCKS5 Proxy, в частности от TOR, для уточнения текущей информации.  
+Начиная с `v2.4` вы можете использовать SOCKS5 Proxy, в частности от TOR, для уточнения текущей информации, если у вас заблокирован оригинальный сайт.  
 Например: 
 ```
 docker run --rm  --network=host --env HTTPS_PROXY=socks5h://localhost:9150 dmitryfrombigcity/tor_relays:latest 
 ```
+Начиная с `v2.5` улучшено отображение ошибок.  
+Например:  
+`# URL:onionoo.torproject.org >> Error:SSLError`
 
 
 
