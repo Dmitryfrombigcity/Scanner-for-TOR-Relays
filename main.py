@@ -2,8 +2,9 @@ import argparse
 import asyncio
 import sys
 import urllib.parse
+from functools import wraps
 from itertools import count, cycle
-from typing import Any
+from typing import Any, Callable, Coroutine
 
 import requests
 
@@ -49,13 +50,14 @@ def output_(
 ) -> None:
     """Split for test purpose"""
 
-    print("\r         "
-          "address                          "
-          "fingerprint                "
-          "country_name   "
-          "first_seen "
-          "guard_probability advertised_bandwidth"
-          )
+    print(
+        "\r         "
+        "address                          "
+        "fingerprint                "
+        "country_name   "
+        "first_seen "
+        "guard_probability advertised_bandwidth"
+    )
     global relays_lst
 
     if top:
@@ -101,6 +103,16 @@ def parse(response: requests.Response) -> list[Relay]:
         sys.exit(1)
 
 
+def suppress(func: Callable[[], Coroutine[Any, Any, None]]) -> Callable[[], Coroutine[Any, Any, None]]:
+    @wraps(func)
+    async def wrapper() -> None:
+        if not args.silent:
+            return await func()
+
+    return wrapper
+
+
+@suppress
 async def progress_bar() -> None:
     hide_cursor = '\x1b[?25l'
     show_cursor = '\x1b[?25h'
@@ -115,7 +127,7 @@ async def progress_bar() -> None:
 
 
 async def main(relays: list[Relay]) -> None:
-    progress = asyncio.create_task(progress_bar())
+    progress: asyncio.Task[None] = asyncio.create_task(progress_bar())
     try:
         async with asyncio.TaskGroup() as group:
             for relay in relays:
@@ -145,7 +157,8 @@ async def connect(relay: Relay) -> Relay | None:
         try:
             address, port = relay.or_addresses.ip4.split(":")
             reader, writer = await asyncio.wait_for(
-                asyncio.open_connection(address, port), settings.TIMEOUT)
+                asyncio.open_connection(address, port), settings.TIMEOUT
+            )
             writer.close()
             await writer.wait_closed()
         except asyncio.TimeoutError:
@@ -189,7 +202,17 @@ if __name__ == '__main__':
         default=False,
         help='display only the top five relays and input templates'
     )
+    parser.add_argument(
+        '-s',
+        '--silent',
+        dest='silent',
+        action='store_const',
+        const=True,
+        default=False,
+        help='not display the progress bar'
+    )
     args = parser.parse_args()
+
     try:
         asyncio.run(main(parse(grab())))
     except KeyboardInterrupt:
