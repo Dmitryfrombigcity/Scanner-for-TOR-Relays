@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import os
 import sys
 import urllib.parse
 from functools import wraps
@@ -12,6 +13,8 @@ from exceptions import TooManyOpenFiles, NetworkIsUnreachable
 from schemas import Relays, Relay
 from settings import BASEURL, HEADERS, settings
 
+os.environ['NO_PROXY'] = settings.NO_PROXY
+
 number = count(start=1)
 semaphore: asyncio.Semaphore = asyncio.Semaphore(settings.OPEN_FILES)
 relays_lst: list[Relay] = []
@@ -20,9 +23,7 @@ relays_lst: list[Relay] = []
 def grab() -> requests.Response:
     urls = [
         BASEURL,
-        # "https://icors.vercel.app/?" + urllib.parse.quote(BASEURL),
-        "https://github.com/Dmitryfrombigcity/tor-onionoo-mirror/raw/master/details-running-relays.json"
-
+        "https://raw.githubusercontent.com/Dmitryfrombigcity/tor-onionoo-mirror/master/details-running-relays.json"
     ]
     for url in urls:
         try:
@@ -79,9 +80,13 @@ def output_(
         if top:
             temp.append(f"{relay.or_addresses.ip4} {relay.fingerprint}\n")
     if top:
-        print("\n********************************* Replace bridges for Tor Browser *********************************\n")
+        print(
+            "\n********************************* Replace bridges for Tor Browser *********************************\n"
+        )
         print(*temp, sep='')
-        print("*********************************** Replace bridges for torrc ***************************************\n")
+        print(
+            "*********************************** Replace bridges for torrc ***************************************\n"
+        )
         for item in temp[:3]:
             print(f"Bridge {item}", end='')
         print("UseBridges 1")

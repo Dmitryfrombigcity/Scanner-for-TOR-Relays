@@ -1,6 +1,3 @@
-from typing import Annotated
-
-from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASEURL = ("https://onionoo.torproject.org/details?type=relay&running=true&recommended_version=true&"
@@ -15,8 +12,9 @@ HEADERS = {
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env')
 
-    TIMEOUT: int = Field(default=5)
-    OPEN_FILES: int = Field(default=1000)
+    TIMEOUT: int = 5
+    OPEN_FILES: int = 1000
+    NO_PROXY: str = 'raw.githubusercontent.com'
 
 
 settings = Settings()
