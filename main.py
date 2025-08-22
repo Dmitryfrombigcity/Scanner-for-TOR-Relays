@@ -1,6 +1,7 @@
 import argparse
 import asyncio
-import os
+import contextlib
+import io
 import sys
 import urllib.parse
 from functools import wraps
@@ -12,8 +13,6 @@ import requests
 from exceptions import TooManyOpenFiles, NetworkIsUnreachable
 from schemas import Relays, Relay
 from settings import BASEURL, HEADERS, settings
-
-os.environ['NO_PROXY'] = settings.NO_PROXY
 
 number = count(start=1)
 semaphore: asyncio.Semaphore = asyncio.Semaphore(settings.OPEN_FILES)
@@ -44,12 +43,35 @@ def callback(task: asyncio.Task[Any]) -> None:
             relays_lst.append(relay)
 
 
-def output_(
-        bandwidth: bool,
-        guard_relays: bool,
-        top: bool
-) -> None:
-    """Split for test purpose"""
+def modify(func: Callable[[], None]) -> Callable[[], None]:
+    @wraps(func)
+    def wrapper() -> None:
+        if not (args.orbot or  args.browser):
+            return func()
+        else:
+            s = io.StringIO()
+            with contextlib.redirect_stdout(s):
+                args.top = True
+                func()
+            parts = s.getvalue().partition(
+                "*********************************** Replace bridges for Orbot "
+                "***************************************\n"
+            )
+            if args.browser:
+                print("\r                     ", parts[0])
+            if args.orbot:
+                print("\r                     ", parts[-1])
+
+
+    return wrapper
+
+
+@modify
+def output() -> None:
+    global relays_lst
+    relays_lst.sort(
+        key=lambda x: x.advertised_bandwidth if x.advertised_bandwidth is not None else 0, reverse=True
+    )
 
     print(
         "\r         "
@@ -59,15 +81,14 @@ def output_(
         "first_seen "
         "guard_probability advertised_bandwidth"
     )
-    global relays_lst
 
-    if top:
+    if args.top:
         relays_lst = relays_lst[:5]
         temp: list[str] = []
 
     for relay in relays_lst:
-        if bandwidth and relay.advertised_bandwidth or guard_relays and relay.guard_probability \
-                or not (bandwidth or guard_relays):
+        if args.bandwidth and relay.advertised_bandwidth or args.guard_relays and relay.guard_probability \
+                or not (args.bandwidth or args.guard_relays):
             print(
                 f"{next(number):3d}. "
                 f"{relay.or_addresses.ip4:<21} "
@@ -77,26 +98,19 @@ def output_(
                 f"{relay.guard_probability if relay.guard_probability is not None else 0:13.7f}    "
                 f"{relay.advertised_bandwidth / 1049000 if relay.advertised_bandwidth is not None else 0:10.2f} MiB/s"
             )
-        if top:
+        if args.top:
             temp.append(f"{relay.or_addresses.ip4} {relay.fingerprint}\n")
-    if top:
+    if args.top:
         print(
             "\n********************************* Replace bridges for Tor Browser *********************************\n"
         )
         print(*temp, sep='')
         print(
-            "*********************************** Replace bridges for torrc ***************************************\n"
+            "*********************************** Replace bridges for Orbot ***************************************\n"
         )
         for item in temp[:3]:
             print(f"Bridge {item}", end='')
         print("UseBridges 1")
-
-
-def output() -> None:
-    relays_lst.sort(
-        key=lambda x: x.advertised_bandwidth if x.advertised_bandwidth is not None else 0, reverse=True
-    )
-    output_(args.bandwidth, args.guard_relays, args.top)
 
 
 def parse(response: requests.Response) -> list[Relay]:
@@ -215,6 +229,24 @@ if __name__ == '__main__':
         const=True,
         default=False,
         help='not display the progress bar'
+    )
+    parser.add_argument(
+        '-o',
+        '--orbot',
+        dest='orbot',
+        action='store_const',
+        const=True,
+        default=False,
+        help='display only bridges for Orbot'
+    )
+    parser.add_argument(
+        '-r',
+        '--browser',
+        dest='browser',
+        action='store_const',
+        const=True,
+        default=False,
+        help='display only bridges for Tor'
     )
     args = parser.parse_args()
 
