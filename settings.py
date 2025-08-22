@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASEURL = ("https://onionoo.torproject.org/details?type=relay&running=true&recommended_version=true&"
@@ -18,3 +20,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+os.environ['NO_PROXY'] = settings.NO_PROXY
