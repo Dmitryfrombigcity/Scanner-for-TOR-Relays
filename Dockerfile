@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1-labs
-FROM python:3.13-alpine3.22
+FROM python:3.13.6-alpine3.22
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1
