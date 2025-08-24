@@ -1,3 +1,4 @@
+from argparse import Namespace
 from asyncio import sleep
 from typing import AnyStr
 from unittest.mock import Mock
@@ -6,8 +7,8 @@ import pytest
 from _pytest.capture import CaptureFixture
 
 import main
-from settings import settings
 from sample import GOOD_IP, RELAYS_ALL, RELAYS, RELAYS_RESULT
+from settings import settings
 
 
 class FakeWriter:
@@ -55,20 +56,29 @@ async def test_relays_lst(mocker: Mock) -> None:
 
 
 @pytest.mark.parametrize(
-    "bandwidth, guard_relays, top, result_index", [
-        (False, False, False, 0),
-        (True, False, False, 1),
-        (False, True, False, 2),
-        (False, False, True, 3)
+    "bandwidth, guard_relays, top, orbot, browser, result_index", [
+        (False, False, False, False, False, 0),
+        (True, False, False, False, False, 1),
+        (False, True, False, False, False, 2),
+        (True, True, False, False, False, 3),
+        (False, False, True, False, False, 4),
+        (False, False, False, False, True, 5),
+        (False, False, False, True, False, 6),
+
     ]
 )
 def test_relays_filter(
         bandwidth: bool,
         guard_relays: bool,
         top: bool,
+        orbot: bool,
+        browser: bool,
         result_index: int,
         capsys: CaptureFixture[AnyStr]
 ) -> None:
-    main.output_(bandwidth, guard_relays, top)
+    main.args = Namespace(
+        bandwidth=bandwidth, guard_relays=guard_relays, top=top, silent=False, orbot=orbot, browser=browser
+    )
+    main.output()
     captured = capsys.readouterr()
     assert captured.out == RELAYS_RESULT[result_index]
