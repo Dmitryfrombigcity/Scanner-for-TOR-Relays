@@ -46,7 +46,7 @@ def callback(task: asyncio.Task[Any]) -> None:
 def modify(func: Callable[[], None]) -> Callable[[], None]:
     @wraps(func)
     def wrapper() -> None:
-        if not (args.orbot or  args.browser):
+        if not (args.orbot or args.browser):
             return func()
         else:
             s = io.StringIO()
@@ -61,7 +61,6 @@ def modify(func: Callable[[], None]) -> Callable[[], None]:
                 print("\r                     ", parts[0])
             if args.orbot:
                 print("\r                     ", parts[-1])
-
 
     return wrapper
 
@@ -87,8 +86,10 @@ def output() -> None:
         temp: list[str] = []
 
     for relay in relays_lst:
-        if args.bandwidth and relay.advertised_bandwidth or args.guard_relays and relay.guard_probability \
-                or not (args.bandwidth or args.guard_relays):
+        if (args.bandwidth and relay.advertised_bandwidth and args.guard_relays and relay.guard_probability
+                or args.bandwidth and relay.advertised_bandwidth and not args.guard_relays
+                or args.guard_relays and relay.guard_probability and not args.bandwidth
+                or not (args.bandwidth or args.guard_relays)):
             print(
                 f"{next(number):3d}. "
                 f"{relay.or_addresses.ip4:<21} "
