@@ -12,7 +12,6 @@ from features import modify, suppress
 from schemas import Relays, Relay
 from settings import BASEURL, HEADERS, settings
 
-assert args
 number = count(start=1)
 semaphore: asyncio.Semaphore = asyncio.Semaphore(settings.OPEN_FILES)
 relays_lst: list[Relay] = []
