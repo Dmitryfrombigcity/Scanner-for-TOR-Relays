@@ -1,19 +1,18 @@
-import argparse
 import asyncio
-import contextlib
-import io
 import sys
 import urllib.parse
-from functools import wraps
 from itertools import count, cycle
-from typing import Any, Callable, Coroutine
+from typing import Any
 
 import requests
 
+from arguments import args
 from exceptions import TooManyOpenFiles, NetworkIsUnreachable
+from features import modify, suppress
 from schemas import Relays, Relay
 from settings import BASEURL, HEADERS, settings
 
+assert args
 number = count(start=1)
 semaphore: asyncio.Semaphore = asyncio.Semaphore(settings.OPEN_FILES)
 relays_lst: list[Relay] = []
@@ -43,28 +42,6 @@ def callback(task: asyncio.Task[Any]) -> None:
             relays_lst.append(relay)
 
 
-def modify(func: Callable[[], None]) -> Callable[[], None]:
-    @wraps(func)
-    def wrapper() -> None:
-        if not (args.orbot or args.browser):
-            return func()
-        else:
-            s = io.StringIO()
-            with contextlib.redirect_stdout(s):
-                args.top = True
-                func()
-            parts = s.getvalue().partition(
-                "*********************************** Replace bridges for Orbot "
-                "***************************************\n"
-            )
-            if args.browser:
-                print("\r                     ", parts[0])
-            if args.orbot:
-                print("\r                     ", parts[-1])
-
-    return wrapper
-
-
 @modify
 def output() -> None:
     global relays_lst
@@ -73,12 +50,13 @@ def output() -> None:
     )
 
     print(
-        "\r         "
-        "address                          "
-        "fingerprint                "
-        "country_name   "
-        "first_seen "
-        "guard_probability advertised_bandwidth"
+        "\r", " " * 9,
+        "address", " " * 26,
+        "fingerprint", " " * 16,
+        "country_name", " " * 3,
+        "first_seen", " ",
+        "guard_probability advertised_bandwidth",
+        sep=""
     )
 
     if args.top:
@@ -121,15 +99,6 @@ def parse(response: requests.Response) -> list[Relay]:
     except Exception as err:
         print(err.__repr__())
         sys.exit(1)
-
-
-def suppress(func: Callable[[], Coroutine[Any, Any, None]]) -> Callable[[], Coroutine[Any, Any, None]]:
-    @wraps(func)
-    async def wrapper() -> None:
-        if not args.silent:
-            return await func()
-
-    return wrapper
 
 
 @suppress
@@ -194,63 +163,6 @@ async def connect(relay: Relay) -> Relay | None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-g',
-        '--guard',
-        dest='guard_relays',
-        action='store_const',
-        const=True,
-        default=False,
-        help='display only relays with positive guard_probability'
-    )
-    parser.add_argument(
-        '-b',
-        '--bandwidth',
-        dest='bandwidth',
-        action='store_const',
-        const=True,
-        default=False,
-        help='display only relays with positive advertised_bandwidth'
-    )
-    parser.add_argument(
-        '-t',
-        '--top',
-        dest='top',
-        action='store_const',
-        const=True,
-        default=False,
-        help='display only the top five relays and input templates'
-    )
-    parser.add_argument(
-        '-s',
-        '--silent',
-        dest='silent',
-        action='store_const',
-        const=True,
-        default=False,
-        help='not display the progress bar'
-    )
-    parser.add_argument(
-        '-o',
-        '--orbot',
-        dest='orbot',
-        action='store_const',
-        const=True,
-        default=False,
-        help='display only bridges for Orbot'
-    )
-    parser.add_argument(
-        '-r',
-        '--browser',
-        dest='browser',
-        action='store_const',
-        const=True,
-        default=False,
-        help='display only bridges for Tor'
-    )
-    args = parser.parse_args()
-
     try:
         asyncio.run(main(parse(grab())))
     except KeyboardInterrupt:
