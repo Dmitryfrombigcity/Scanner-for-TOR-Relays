@@ -74,11 +74,14 @@ def test_relays_filter(
         orbot: bool,
         browser: bool,
         result_index: int,
-        capsys: CaptureFixture[AnyStr]
+        capsys: CaptureFixture[AnyStr],
+        mocker: Mock
 ) -> None:
-    main.args = Namespace(
+    args = Namespace(
         bandwidth=bandwidth, guard_relays=guard_relays, top=top, silent=False, orbot=orbot, browser=browser
     )
+    mocker.patch("main.args", args)
+    mocker.patch("features.args", args)
     main.output()
     captured = capsys.readouterr()
     assert captured.out == RELAYS_RESULT[result_index]
