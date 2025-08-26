@@ -191,14 +191,30 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         Основная идея использования этой опции, это запуск на `Android` при помощи [Termux](https://termux.dev).  
       - Установка [отсюда](https://f-droid.org/packages/com.termux/) или [отсюда](https://github.com/termux/termux-app).  
       - Получите доступ к хранилищу -> [руководство](https://wiki.termux.com/wiki/Internal_and_external_storage)   
-             ```  
-             termux-setup-storage  
-             ```  
-      - Устанавливаете `python` -> [руководство](https://wiki.termux.com/wiki/Python)  
-             ```  
-             pkg install python  
-             ```
+        ```
+        termux-setup-storage
+        ```
+      - Установите необходимые пакеты -> [руководство](https://wiki.termux.com/wiki/Python)  
+        ```
+        pkg install python curl rust   
+        ```
+      - Установите необходимые зависимости ->   
+        ```
+        pip install requests[socks] pydantic pydantic-settings
+        ```
+        *без установки rust'a установить pydantic не удалось*
         
+       - Так как `Docker` не работает на `Android`, скопируем необходимые файлы
+         ```
+         mkdir ~/storage/shares/Relays && curl -o 'main.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/main.py && curl -o '.env' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/.env && curl -o 'arguments.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/arguments.py && curl -o 'exceptions.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/exceptions.py && curl -o 'features.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/features.py && curl -o 'schemas.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/schemas.py && curl -o 'settings.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/settings.py
+         ```
+      - Запускаем, опции и переменные среды по желанию
+        ```
+        python main.py -o
+        ```
+        ```
+        env all_proxy=socks5h://localhost:9050 python main.py -o
+        ```    
       --browser (-r)  выводит `bridges`  в стандартном формате для `Tor`.     
       
       
