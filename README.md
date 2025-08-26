@@ -157,28 +157,52 @@ docker run --rm dmitryfrombigcity/tor_relays --top
 
 ### Updates.  
 
-- Начиная с `v2.3` информация с сайта `onionoo.torproject.org` кэшируется каждые 8 часов.  
-- Начиная с `v2.4` вы можете использовать SOCKS5 Proxy, в частности от TOR, для уточнения текущей информации, если у вас заблокирован оригинальный сайт.  
-Например: 
-```
-docker run --rm  --network=host --env HTTPS_PROXY=socks5h://localhost:9150 dmitryfrombigcity/tor_relays:latest  
-```
-- Начиная с `v2.5` улучшено отображение ошибок.  
-Например:
+- **Начиная с `v2.3`** информация с сайта `onionoo.torproject.org` кэшируется каждые 8 часов.  
+- **Начиная с `v2.4`** вы можете использовать SOCKS5 Proxy, в частности от TOR, для уточнения текущей информации, если у вас заблокирован оригинальный сайт.  
+  Например: 
+  ```
+  docker run --rm  --network=host --env HTTPS_PROXY=socks5h://localhost:9150 dmitryfrombigcity/tor_relays:latest  
+  ```
+- **Начиная с `v2.5`** улучшено отображение ошибок.  
+  Например:
 
-`# URL:onionoo.torproject.org >> Error:SSLError`  
-- Начиная с `v2.6` добавлена опция:    
---silent  (-s) подавляет вывод `progress bar`  
+  `# URL:onionoo.torproject.org >> Error:SSLError`
+   
+- **Начиная с `v2.6`** добавлена опция:    
+  --silent  (-s) подавляет вывод `progress bar`  
   Основная идея использования этой опции, это [cron]( https://ru.wikipedia.org/wiki/Cron)  
-Например:
-```
-crontab -e
-```
-```
-0 9 * * * date >> ~/relays  && docker run --rm dmitryfrombigcity/tor_relays -ts >> ~/relays
-```
-Будет ежедневно запускаться в 9.00 и записывать результаты в файл `relays`.  
-
+  Например:
+  ```
+  crontab -e
+  ```
+  ```
+  0 9 * * * date >> ~/relays  && docker run --rm dmitryfrombigcity/tor_relays -ts >> ~/relays
+  ```
+  Будет ежедневно запускаться в 9.00 и записывать результаты в файл `relays`.  
+- **Начиная с `v2.7`**
+    - Создаётся переменная `NO_PROXY` по умолчанию `raw.githubusercontent.com`, что позволяет не проксировать обращение к сайту при использовании  `ALL_PROXY` `HTTPS_PROXY`,  
+      однако эту переменную можно явно переписать в командной строке.  
+      Например: 
+      ```
+      docker run --rm  --network=host --env HTTPS_PROXY=socks5h://localhost:9150  --env NO_PROXY='' dmitryfrombigcity/tor_relays:latest
+      ```
+    - Добавлены опции:    
+      --orbot  (-o) выводит `bridges` только в формате для [Orbot](https://orbot.app).    
+        Основная идея использования этой опции, это запуск на `Android` при помощи [Termux](https://termux.dev).  
+      - Установка [отсюда](https://f-droid.org/packages/com.termux/) или [отсюда](https://github.com/termux/termux-app).  
+      - Получите доступ к хранилищу -> [руководство](https://wiki.termux.com/wiki/Internal_and_external_storage)   
+             ```  
+             termux-setup-storage  
+             ```  
+      - Устанавливаете `python` -> [руководство](https://wiki.termux.com/wiki/Python)  
+             ```  
+             pkg install python  
+             ```
+        
+      --browser (-r)  выводит `bridges`  в стандартном формате для `Tor`.     
+      
+      
+   
   
 
 
