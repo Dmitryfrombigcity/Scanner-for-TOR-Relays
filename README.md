@@ -215,6 +215,8 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         ```
         env all_proxy=socks5h://localhost:9050 python main.py -o
         ```
+        ![termux](https://github.com/user-attachments/assets/a1bee408-8d91-4426-96c5-eeca736c2206)
+        
         #### English  
         >The main idea behind using this option is to run it on Android using [Termux](https://termux.dev).  
         >Install from [here](https://f-droid.org/packages/com.termux/) or [here](https://github.com/termux/termux-app).  
@@ -244,8 +246,10 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         >env all_proxy=socks5h://localhost:9050 python main.py -o
         >```
       --browser (-r)  выводит `bridges`  в стандартном формате для `Tor`.     
+
       
       
+
    
   
 
