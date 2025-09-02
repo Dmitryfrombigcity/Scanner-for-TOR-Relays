@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -12,7 +13,7 @@ HEADERS = {
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env')
+    model_config = SettingsConfigDict(env_file=Path(__file__).parent / '.env')
 
     TIMEOUT: int = 5
     OPEN_FILES: int = 1000
@@ -21,3 +22,4 @@ class Settings(BaseSettings):
 
 settings = Settings()
 os.environ['NO_PROXY'] = settings.NO_PROXY
+
