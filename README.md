@@ -212,7 +212,7 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         ```
         chmod u+x main.py && ln -s /data/data/com.termux/files/home/Relays/main.py  /data/data/com.termux/files/usr/bin/relays
         ```  
-      - Запускаем, опции и переменные среды по желанию. Однако файл `.env` будет доступен только при запуске из  `~/Relays`  
+      - Запускаем, опции и переменные среды по желанию. ~~Однако файл `.env` будет доступен только при запуске из  `~/Relays`~~ (*Исправлено*)
         ```
         relays -o
         ```
@@ -248,7 +248,7 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         >```
         >chmod u+x main.py && ln -s /data/data/com.termux/files/home/Relays/main.py  /data/data/com.termux/files/usr/bin/relays
         >```  
-        >Launch; however, the `.env` file will only be available when running from `~/Relays`
+        >Launch
         >```
         >relays -o
         >```
