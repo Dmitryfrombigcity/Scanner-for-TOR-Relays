@@ -190,13 +190,9 @@ docker run --rm dmitryfrombigcity/tor_relays --top
       --orbot  (-o) выводит `bridges` только в формате для [Orbot](https://orbot.app).    
         Основная идея использования этой опции, это запуск на `Android` при помощи [Termux](https://termux.dev).  
       - Установка [отсюда](https://f-droid.org/packages/com.termux/) или [отсюда](https://github.com/termux/termux-app).  
-      - Получите доступ к хранилищу -> [руководство](https://wiki.termux.com/wiki/Internal_and_external_storage)   
-        ```
-        termux-setup-storage
-        ```
       - Установите необходимые пакеты -> [руководство](https://wiki.termux.com/wiki/Python)  
         ```
-        pkg install python curl rust   
+        pkg install wget python rust   
         ```
       - Установите необходимые зависимости ->   
         ```
@@ -206,27 +202,33 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         
        - Так как `Docker` не работает на `Android`, скопируем необходимые файлы
          ```
-         mkdir ~/storage/shared/Relays && cd ~/storage/shared/Relays && curl -o 'main.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/main.py && curl -o '.env' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/.env && curl -o 'arguments.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/arguments.py && curl -o 'exceptions.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/exceptions.py && curl -o 'features.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/features.py && curl -o 'schemas.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/schemas.py && curl -o 'settings.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/settings.py
+         mkdir Relays && cd Relays && wget https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/main.py https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/.env  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/arguments.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/exceptions.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/features.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/schemas.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/settings.py
          ```
-      - Запускаем, опции и переменные среды по желанию
+      - Добавляем `shebang` (первую строчку) в файл `main.py`
         ```
-        python main.py -o
+        #!/data/data/com.termux/files/usr/bin/python
+        ```
+      - Выполняем настройку
+        ```
+        chmod u+x main.py && ln -s /data/data/com.termux/files/home/Relays/main.py  /data/data/com.termux/files/usr/bin/relays
+        ```  
+      - Запускаем, опции и переменные среды по желанию. Однако файл `.env` будет доступен только при запуске из  `~/Relays`  
+        ```
+        relays -o
         ```
         ```
-        env all_proxy=socks5h://localhost:9050 python main.py -o
+        env all_proxy=socks5h://localhost:9050 relays -t
         ```
-        ![termux](https://github.com/user-attachments/assets/a1bee408-8d91-4426-96c5-eeca736c2206)
+      - Или классический запуск  
+        <img width="591" height="1280" alt="termux" src="https://github.com/user-attachments/assets/8b433aaa-b7f0-464b-ae0b-a92aed8d702b" />
+
         
         #### English  
         >The main idea behind using this option is to run it on Android using [Termux](https://termux.dev).  
         >Install from [here](https://f-droid.org/packages/com.termux/) or [here](https://github.com/termux/termux-app).  
-        >Access the storage -> [manual](https://wiki.termux.com/wiki/Internal_and_external_storage)  
-        >```
-        >termux-setup-storage  
-        >```
         >Install the necessary packages -> [manual](https://wiki.termux.com/wiki/Python)  
         >```
-        >pkg install python curl rust   
+        >pkg install wget python rust   
         >```
         >Install the necessary dependencies ->
         >```
@@ -236,14 +238,26 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         >
         >Since Docker does not work on Android, we will copy only the necessary files
         >```
-        >mkdir ~/storage/shared/Relays && cd ~/storage/shared/Relays && curl -o 'main.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/main.py && curl -o '.env' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/.env && curl -o 'arguments.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/arguments.py && curl -o 'exceptions.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/exceptions.py && curl -o 'features.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/features.py && curl -o 'schemas.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/schemas.py && curl -o 'settings.py' https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/main/settings.py
+        >mkdir Relays && cd Relays && wget https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/main.py https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/.env  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/arguments.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/exceptions.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/features.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/schemas.py  https://raw.githubusercontent.com/Dmitryfrombigcity/Scanner-for-TOR-Relays/refs/heads/master/settings.py
         >```
-        >Launch
+        >Add `shebang` (first line) to `main.py` file
+        >```
+        >#!/data/data/com.termux/files/usr/bin/python
+        >```
+        >Setup
+        >```
+        >chmod u+x main.py && ln -s /data/data/com.termux/files/home/Relays/main.py  /data/data/com.termux/files/usr/bin/relays
+        >```  
+        >Launch; however, the `.env` file will only be available when running from `~/Relays`
+        >```
+        >relays -o
+        >```
+        >```
+        >env all_proxy=socks5h://localhost:9050 relays -t
+        >```
+        >Or a classic launch
         >```
         >python main.py -o
-        >```
-        >```
-        >env all_proxy=socks5h://localhost:9050 python main.py -o
         >```
       --browser (-r)  выводит `bridges`  в стандартном формате для `Tor`.     
 
