@@ -37,7 +37,8 @@ def callback(task: asyncio.Task[Any]) -> None:
     if (not task.cancelled()
             and not task.exception()):
         relay = task.result()
-        if relay:
+        if (relay and
+                relay.or_addresses.ip4 not in settings.BLACKLIST):
             relays_lst.append(relay)
 
 
