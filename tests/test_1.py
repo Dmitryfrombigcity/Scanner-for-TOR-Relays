@@ -1,5 +1,6 @@
 from argparse import Namespace
 from asyncio import sleep
+from functools import partial
 from typing import AnyStr
 from unittest.mock import Mock
 
@@ -31,14 +32,18 @@ async def fake_open_connection(
         return None
 
 
-def fake_output() -> None:
+def fake_output(blacklist: bool) -> None:
     main.relays_lst.sort(
         key=lambda x: x.advertised_bandwidth if x.advertised_bandwidth is not None else 0, reverse=True
     )
-    assert main.relays_lst == RELAYS_ALL
+    assert main.relays_lst == (RELAYS_ALL[:-2] if blacklist else RELAYS_ALL)
 
 
-async def test_relays_lst(mocker: Mock) -> None:
+@pytest.mark.parametrize(
+    "blacklist", [True, False]
+)
+async def test_relays_lst(mocker: Mock, blacklist: bool) -> None:
+    main.relays_lst = []
     mock_open_connection = mocker.AsyncMock(
         side_effect=fake_open_connection
     )
@@ -46,9 +51,11 @@ async def test_relays_lst(mocker: Mock) -> None:
 
     mock_response = mocker.MagicMock()
     mock_response.return_value.text = RELAYS
+    fake_output_ = partial(fake_output, blacklist)
+    settings.BLACKLIST = {'95.160.224.127:9001', '154.62.226.26:443'} if blacklist else set()
 
     mock_output = mocker.MagicMock(
-        side_effect=fake_output
+        side_effect=fake_output_
     )
 
     mocker.patch("main.output", mock_output)
