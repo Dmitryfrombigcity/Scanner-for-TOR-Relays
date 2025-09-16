@@ -37,4 +37,4 @@ jobs:
     - name: add deps
       run: pip install -r requirements.txt
     - name: test
-      run: pytest -vv
+      run: mypy  --strict --pretty . && pytest -vv
