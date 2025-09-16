@@ -38,5 +38,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print(f'# The blacklist >> {settings.BLACKLIST if settings.BLACKLIST else 'empty'}')
+print(f'# The blacklist >> {settings.BLACKLIST if settings.BLACKLIST else "empty"}')
 os.environ['NO_PROXY'] = settings.NO_PROXY
