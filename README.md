@@ -264,7 +264,8 @@ docker run --rm dmitryfrombigcity/tor_relays --top
   Основная идея: иногда узлы доступны, но не работают. Добавляем их в переменную через запятую.  
   При запуске программа валидирует переменную и выводит её состояние.  
 
-      
+  <img width="1063" height="118" alt="blacklist" src="https://github.com/user-attachments/assets/843b3c7e-3b57-45fe-91f6-70edec761c84" />
+
       
 
    
