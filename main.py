@@ -95,7 +95,7 @@ def output() -> None:
 def parse(response: requests.Response) -> list[Relay]:
     try:
         data = Relays.model_validate_json(response.text)
-        print(f'# Relays published >> {data.relays_published} UTC')
+        print(f'# Relays published >> {data.relays_published} UTC-1')
         return data.relays
     except Exception as err:
         print(err.__repr__())
