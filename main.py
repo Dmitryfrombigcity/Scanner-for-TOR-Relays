@@ -10,7 +10,7 @@ from arguments import args
 from exceptions import TooManyOpenFiles, NetworkIsUnreachable
 from features import modify, suppress
 from schemas import Relays, Relay
-from settings import BASEURL, HEADERS, settings
+from settings import BASEURL, HEADERS, settings, BACKUP_URL
 
 number = count(start=1)
 semaphore: asyncio.Semaphore = asyncio.Semaphore(settings.OPEN_FILES)
@@ -20,7 +20,7 @@ relays_lst: list[Relay] = []
 def grab() -> requests.Response:
     urls = [
         BASEURL,
-        "https://raw.githubusercontent.com/Dmitryfrombigcity/tor-onionoo-mirror/master/details-running-relays.json"
+        BACKUP_URL
     ]
     for url in urls:
         try:
