@@ -18,4 +18,5 @@ class Relay(BaseModel):
 
 
 class Relays(BaseModel):
+    relays_published: str
     relays: list[Relay]
