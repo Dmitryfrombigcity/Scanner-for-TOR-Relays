@@ -220,7 +220,8 @@ docker run --rm dmitryfrombigcity/tor_relays --top
         env all_proxy=socks5h://localhost:9050 relays -t
         ```
       - Или классический запуск  
-        <img width="591" height="1280" alt="termux" src="https://github.com/user-attachments/assets/8b433aaa-b7f0-464b-ae0b-a92aed8d702b" />
+        <img width="350" height="800" alt="termux" src="https://github.com/user-attachments/assets/8b433aaa-b7f0-464b-ae0b-a92aed8d702b" />
+
 
         
         #### English  
